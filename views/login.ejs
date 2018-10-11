@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/stylesheets/login.css'/>
+    <% include templates/basic_scripts.ejs %>
+</head>
+<body>
+<div class="container bootstrap">
+    <h2>Meme Rank! Login</h2>
+    <p>*Login design inspired from a w3schools tutorial</p>
+    <form>
+        <div class="image-container">
+            <img src="/images/wpi_logo.png" class="user-logo img-fluid">
+        </div>
+
+        <div class="container">
+            <% include templates/login_view.ejs %>
+            <button id="toggle-button" data-toggle="collapse" data-target="#toggle">Register?</button>
+
+            <div id="toggle" class="collapse">
+                <% include templates/register_view.ejs %>
+            </div>
+            <span id="auth-status"></span>
+        </div>
+    </form>
+    <div class="footer">
+        <p>Created by: Adonay Resom </p>
+        <p>This project was created for CS 4241.</p>
+    </div>
+</div>
+
+<script>
+
+    ajReq = new XMLHttpRequest();
+
+    ajReq.onreadystatechange = function () {
+        if (ajReq.readyState === 4 && ajReq.status === 200) {
+            var data = JSON.parse(ajReq.responseText);
+
+            console.log("response received");
+        }
+    };
+
+
+    ajSend = new XMLHttpRequest();
+    ajSend.onreadystatechange = function () {
+        if (ajSend.readyState !== 4 && ajSend.status === 200) {
+            var l = document.createElement("a");
+            l.href = ajSend.responseURL;
+            console.log("Response path is " + l.pathname);
+            switch (l.pathname) {
+                case "/home":
+                    window.location.href = "home";
+                    break;
+                default:
+                    document.getElementById("auth-status").innerHTML = ajSend.responseText;
+                    break;
+            }
+        }
+    };
+
+    function sendDataToServer(input, api, contentType) {
+        ajSend.open('POST', api);
+        ajSend.setRequestHeader("Content-Type", contentType);
+        ajSend.send(input);
+    }
+
+    function requestData(api) {
+        ajReq.open("GET", api);
+        ajReq.send();
+        console.log("waiting for m_data...");
+    }
+
+    function login() {
+        var jsonLogin = {
+            "username": document.getElementById("usrn").value,
+            "password": document.getElementById("psrd").value
+        };
+
+        sendDataToServer(JSON.stringify(jsonLogin), '/login', 'application/json');
+    }
+
+    function register() {
+        var jsonLogin = {
+            "fullname": document.getElementById("fullname").value,
+            "username": document.getElementById("username").value,
+            "password": document.getElementById("password").value,
+            "password_confirmation": document.getElementById("psrd-cfrm").value,
+            "email": document.getElementById("email-in").value,
+            "phone": document.getElementById("phone-in").value,
+            "venmo": document.getElementById("venmo-in").value
+        };
+        console.log(JSON.stringify(jsonLogin));
+
+        sendDataToServer(JSON.stringify(jsonLogin), '/register', 'application/json');
+    }
+
+    // attach "Enter" keyboard button to Login button
+    document.getElementById("psrd").addEventListener("keyup", function (event) {
+        event.preventDefault();
+        $('#toggle-button').change(function () {
+            /*if (this.checked) {
+                if (event.keyCode === 13) {
+                    document.getElementById("register-button").click();
+                }
+            } else {
+                if (event.keyCode === 13) {
+                    document.getElementById("loginButton").click();
+                }
+            }*/
+            if (event.keyCode === 13) {
+                document.getElementById("loginButton").click();
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    }, false);
+</script>
+</body>
+</html>

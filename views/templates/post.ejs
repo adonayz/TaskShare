@@ -1,0 +1,56 @@
+<div class="w3-card-4 card w3-mobile">
+    <div class="w3-container w3-margin-top">
+        <div class="post-profile-picture-container w3-quarter w3-left w3-circle">
+            <span class="post-profile-picture-container"></span>
+            <img src="/images/profile-default.png" alt="Avatar" class="post-profile-image"/>
+        </div>
+        <div class="w3-threequarter w3-left">
+            <p>
+            <div class="post-user-info">
+                <span class="post-fullname-display"><%= currentUser.fullname %> </span>
+                <span class="post-username-display">@<%= currentUser.user_name %></span>
+            </div>
+            <div class="post-compensation-area">
+                <label for="task-compensation-input">Rewards</label>
+                <%
+                if(isInputCard){
+                %>
+                <input id="task-compensation-input" type="number" min="0.01" step="0.01" max="2500" value="0.00"
+                       placeholder="Enter $">
+                <% }else{ %>
+                <span id="compensation-amount">$<%=post.reward%></span>
+                <% } %>
+            </div>
+            </p>
+            <%
+            if(isInputCard){
+            %>
+                <div>
+                    <textarea id="instructions-text-area" placeholder="What do you need help with?" class="post-text-area"></textarea>
+                </div>
+            <% }else{ %>
+                <div>
+                    <p><%= post.instructions %></p>
+                    <p><span class="post-time-display">time posted: <%= Date(post.posted_time).toString() %></span></p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <div class="post-buttons">
+        <%
+        if(isInputCard){
+        %>
+            <div>
+                <button onclick="submitNewTask('<%=currentUser.uid%>')" class="w3-button w3-block both">Submit
+                </button>
+            </div>
+        <% }else{ %>
+            <div>
+                <button onclick="messageBoss('<%=post.tid%>')" class="w3-button w3-block w3-half left">Message
+                </button>
+                <button onclick="requestJob('<%=post.tid%>')" class="w3-button w3-half w3-block right">Request
+                </button>
+            </div>
+        <% } %>
+    </div>
+</div>

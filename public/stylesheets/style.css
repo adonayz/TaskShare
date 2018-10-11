@@ -1,0 +1,156 @@
+body{
+    font-family: 'K2D', sans-serif;
+}
+
+ul.nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.nav-bar {
+    padding-bottom: 3%;
+}
+
+.nav-bar ul.nav-list li {
+    float: left;
+}
+
+.nav-bar ul.nav-list li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.nav-bar ul.nav-list li.links a:hover:not(.active) {
+    background-color: #AC2B37;
+}
+
+.nav-bar ul.nav-list li a.active {
+    background-color: #AC2B37;
+}
+
+.nav-bar ul.nav-list li.right {
+    float: right;
+}
+
+#app-name {
+    font-weight: bold;
+    font-family: "Courier New";
+    font-size: 18px;
+    height: 50px;
+    width: 150px;
+    text-align: center;
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+/*
+I took some of the card css code from a W3 tutorial*/
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    border-radius: 10px;
+    /* Added */
+    float: none; /* Added */
+    /* Added */
+    margin: 0 auto 35px;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.post-profile-picture-container{
+    white-space: nowrap; /* this is required unless you put the helper span closely near the img */
+
+    text-align: center; margin: 1em 0;
+}
+
+.post-profile-image{
+    vertical-align: middle;
+    width: 100%;
+    max-width: 50px;
+    height: auto;
+}
+
+.post-profile-image-helper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.post-buttons .left{
+    border-radius: 0 0 0 10px;
+}
+
+.post-buttons .right{
+    border-radius: 0 0 10px 0;
+}
+
+.post-buttons .both{
+    border-radius: 0 0 10px 10px;
+}
+
+.post-buttons button{
+    color: white;
+    background-color: #AC2B37; !important;
+}
+
+.post-buttons button:hover{
+    color: white;
+    background-color: #333; !important;
+}
+
+.post-fullname-display{
+    font-weight: bold;
+}
+
+.post-username-display{
+    font-weight: lighter;
+    font-style: italic;
+}
+
+.post-time-display{
+    font-weight: 100;
+    font-size: 0.8em;
+}
+
+.post-text-area{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}
+
+.post-compensation-area{
+    float: right;
+}
+
+.post-user-info{
+    float: left;
+}
+
+@media screen and (max-width: 600px) {
+    .nav-bar ul.nav-list li.right,
+    .nav-bar ul.nav-list li {
+        float: none;
+    }
+    .post-buttons .left{
+        border-radius: 0 0 0 0;
+    }
+
+    .post-buttons .right{
+        border-radius: 0 0 10px 10px;
+    }
+}

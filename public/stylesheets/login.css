@@ -1,0 +1,109 @@
+/*Style your own assignment! This is fun! */
+
+h2 {
+    display: block;
+    text-align: center;
+}
+
+.container {
+    margin: 0 0 10% 0;
+}
+
+.bootstrap {
+    width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+img {
+    border-radius: 5px 5px 0 0;
+}
+
+form {
+    border: 3px solid #f1f1f1;
+}
+
+input[type=text], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #AC2B37;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+}
+
+.button-container {
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+.button-container:after {
+    display: table;
+    clear: both;
+}
+
+.button-container-items {
+    width: 99.9%;
+    display: inline-block;
+}
+
+.image-container {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+
+img.user-logo {
+    width: 17%;
+    border-radius: 50%;
+    max-width: 50%;
+}
+.container {
+    padding: 16px;
+}
+span.password {
+    float: right;
+    padding-top: 16px;
+}
+
+@media screen and (max-width: 600px) {
+    span.password {
+        display: block;
+        float: none;
+    }
+    .button-container{
+        width: 100%;
+    }
+
+    .button-container-items{
+        width: 100%;
+    }
+}
+
+#auth-status{
+    color: #AC2B37;
+}
+
+.footer{
+    margin-top: 5%;
+    color:#AC2B37;
+    font-family: "Courier New";
+    font-size: 15px;
+    text-align: center;
+}
+
+#toggle-button{
+    margin-top: 5%;
+}
