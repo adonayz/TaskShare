@@ -8,7 +8,7 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var connectMongo = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
-mongoose.connect('mongodb://localhost/appstorage');
+mongoose.connect(process.env.MONGODB_URI);
 var database = mongoose.connection;
 
 database.on('error', console.error.bind(console, 'connection error:'));
