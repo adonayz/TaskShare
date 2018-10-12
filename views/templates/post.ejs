@@ -7,18 +7,26 @@
         <div class="w3-threequarter w3-left">
             <p>
             <div class="post-user-info">
-                <span class="post-fullname-display"><%= currentUser.fullname %> </span>
-                <span class="post-username-display">@<%= currentUser.user_name %></span>
+                <%
+                if(isInputCard){
+                %>
+                    <span class="post-fullname-display"><%= currentUser.fullname %> </span>
+                    <span class="post-username-display">@<%= currentUser.user_name %></span>
+                <% }else{ %>
+                    <span class="post-fullname-display"><%= post.fullname %> </span>
+                    <span class="post-username-display">@<%= post.user_name %></span>
+                <% } %>
+
             </div>
             <div class="post-compensation-area">
                 <label for="task-compensation-input">Rewards</label>
                 <%
                 if(isInputCard){
                 %>
-                <input id="task-compensation-input" type="number" min="0.01" step="0.01" max="2500" value="0.00"
-                       placeholder="Enter $">
+                    <input id="task-compensation-input" type="number" min="0.01" step="0.01" max="2500" value="0.00"
+                           placeholder="Enter $">
                 <% }else{ %>
-                <span id="compensation-amount">$<%=post.reward%></span>
+                <span id="compensation-amount">$<%= post.reward %></span>
                 <% } %>
             </div>
             </p>
@@ -26,10 +34,11 @@
             if(isInputCard){
             %>
                 <div>
-                    <textarea id="instructions-text-area" placeholder="What do you need help with?" class="post-text-area"></textarea>
+                    <textarea id="instructions-text-area" placeholder="What do you need help with?"
+                              class="post-text-area"></textarea>
                 </div>
             <% }else{ %>
-                <div>
+                <div style="float:left;">
                     <p><%= post.instructions %></p>
                     <p><span class="post-time-display">time posted: <%= Date(post.posted_time).toString() %></span></p>
                 </div>
@@ -40,17 +49,17 @@
         <%
         if(isInputCard){
         %>
-            <div>
-                <button onclick="submitNewTask('<%=currentUser.uid%>')" class="w3-button w3-block both">Submit
-                </button>
-            </div>
+        <div>
+            <button onclick="submitNewTask('<%= currentUser.uid %>')" class="w3-button w3-block both">Submit
+            </button>
+        </div>
         <% }else{ %>
-            <div>
-                <button onclick="messageBoss('<%=post.tid%>')" class="w3-button w3-block w3-half left">Message
-                </button>
-                <button onclick="requestJob('<%=post.tid%>')" class="w3-button w3-half w3-block right">Request
-                </button>
-            </div>
+        <div>
+            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Message
+            </button>
+            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Request
+            </button>
+        </div>
         <% } %>
     </div>
 </div>

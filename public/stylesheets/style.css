@@ -123,6 +123,7 @@ I took some of the card css code from a W3 tutorial*/
 .post-time-display{
     font-weight: 100;
     font-size: 0.8em;
+    overflow: hidden;
 }
 
 .post-text-area{
@@ -153,4 +154,17 @@ I took some of the card css code from a W3 tutorial*/
     .post-buttons .right{
         border-radius: 0 0 10px 10px;
     }
+}
+
+.post-header{
+
+}
+
+.post-body{
+    position: absolute;
+    bottom: 0px;
+}
+
+.post-arrange{
+    position: relative;
 }

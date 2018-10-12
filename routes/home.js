@@ -36,14 +36,15 @@ var aTask = [{
     posted_time: Date.now()}];
 var aMessage = {};
 
-function createTask(aTask){
-    var newTask = Task(aTask);
+function createTask(aTask ,req, res, next){
     console.log(JSON.stringify(aTask));
-    newTask.save(function (err) {
-        if(err)
+    Task.create(aTask,function (err) {
+        if(err){
             console.log(err.toString());
-            throw err;
-        console.log("Task created")
+            return next(err);
+        }
+        console.log("Task created");
+        renderHomePage(req, res, next);
     });
 }
 
@@ -65,12 +66,24 @@ function createMessage(aMessage){
     });
 }
 
-router.post('/submitNewTask', function (req, res, next) {
+router.post('/requestjob', function (req, res, next) {
+    console.log("Received new task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = req.session.userId;
+        task.status = "PENDING";
+        task.assigned_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
+router.post('/newtask', function (req, res, next) {
     console.log("Received new task");
     var newTaskData = req.body;
-    var toTaskFormat = {instructions: newTaskData.new_instructions, reward: newTaskData.reward_input, uid_boss: newTaskData.uid, status: "POSTED", posted_time: Date.now()};
-    createTask(toTaskFormat);
-    res.end();
+    var toTaskFormat = {instructions: newTaskData.new_instructions, reward: newTaskData.reward_input, uid_boss: newTaskData.uid, status: 'POSTED', posted_time: Date.now()};
+    createTask(toTaskFormat, req, res, next);
 });
 
 
@@ -110,8 +123,31 @@ router.get('/update-user', function (req, res, next) {
     });
 });*/
 /* GET home page. */
+
 router.get('/', function (req, res, next) {
-    console.log("Found HOME");
+    console.log("Found PAID");
+    renderHomePage(req, res, next, 'POSTED');
+});
+
+router.get('/pending', function (req, res, next) {
+    console.log("Found PENDING");
+    renderHomePage(req, res, next, 'PENDING');
+});
+
+router.get('/active_tasks', function (req, res, next) {
+    console.log("Found ACTIVE");
+    renderHomePage(req, res, next, 'ASSIGNED');
+});
+
+router.get('/completed', function (req, res, next) {
+    renderHomePage(req, res, next, 'COMPLETED');
+});
+
+router.get('/paid', function (req, res, next) {
+    renderHomePage(req, res, next, 'PAID');
+});
+
+function renderHomePage(req, res, next, condition) {
     User.find({}, function (err, users) {
         if (err) throw err;
         var user_dict = {}; // pairs uid to username inorder to avoid repetitive querying for uid username pairings later
@@ -119,22 +155,24 @@ router.get('/', function (req, res, next) {
             user_dict[users[i].uid]=users[i].username;
             user_dict[users[i].username]=users[i].fullname;
         }
-        sendTasksToClient(req, res, user_dict);
+        sendTasksToClient(req, res, user_dict, condition);
     });
+}
 
-});
-
-function sendTasksToClient(req, res, user_dict){
+function sendTasksToClient(req, res, user_dict, condition){
     var tasksData = [];
-    Task.find({admin:true}).where('status').equals('POSTED').exec(function (err, tasks) {
+    Task.find({status:condition}, '*',function (err, tasks) {
         if (err) throw err;
         for(var i = 0; i<tasks.length;i++){
-            tasksData.push({tid: tasks[i]._id, fullname: user_dict[user_dict[tasks[i].uid_boss]], user_name: user_dict[tasks[i].uid_boss], instructions: tasks[i].instructions, reward: tasks[i].reward, post_time: tasks[i].posted_time});
+            tasksData.push({tid: tasks[i]._id, user_name: user_dict[tasks[i].uid_boss], instructions: tasks[i].instructions, reward: tasks[i].reward, post_time: tasks[i].posted_time});
         }
+        console.log("Task length now: " + tasks.length);
         var userData = {uid: req.session.userId, user_name: user_dict[req.session.userId], fullname: user_dict[user_dict[req.session.userId]]};
         console.log(JSON.stringify(userData));
+        console.log(JSON.stringify(tasksData));
         res.render('home', {
             title: "Final Project",
+            condition: condition,
             posts: tasksData,
             currentUser: userData
         });

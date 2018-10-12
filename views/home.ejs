@@ -9,7 +9,10 @@
 <% include templates/navbar.ejs %>
 
 <div class="container bootstrap">
+    <h2 align="center"><%=condition%></h2>
+    <%if(condition==="POSTED"){%>
     <%- include("templates/post.ejs", {post: "", currentUser: currentUser, isInputCard:true}) %>
+    <%}%>
 
     <% posts.forEach(function(task){ %>
         <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false}) %>
@@ -21,6 +24,8 @@
 
     ajReq.onreadystatechange = function () {
         if (ajReq.readyState === 4 && ajReq.status === 200) {
+            location.reload();
+            console.log("time to refresh");
         }
     };
 
@@ -54,20 +59,24 @@
         ajReq.send();
         console.log("called " + api + ": waiting for m_data...");
     }
-    
-    function requestJob() {
+
+    function requestJob(tid) {
         console.log("Requesting job");
+        var dataToSend = {tid: tid};
+        sendDataToServer(JSON.stringify(dataToSend), '/home/requestjob', 'application/json');
     }
-    
+
+    function messageBoss(tid) {
+        console.log("message the boss");
+        sendDataToServer(JSON.stringify(dataToSend), '/home/newtask', 'application/json');
+    }
+
     function submitNewTask(uid){
         var reward_input = document.getElementById("task-compensation-input");
         var new_instructions = document.getElementById("instructions-text-area");
         var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
-        sendDataToServer(JSON.stringify(dataToSend), 'submitNewTask', 'application/json');
-    }
-    
-    function messageBoss() {
-        console.log("message the boss");
+        console.log(JSON.stringify(dataToSend));
+        sendDataToServer(JSON.stringify(dataToSend), '/home/newtask', 'application/json');
     }
 </script>
 </html>
