@@ -9,14 +9,43 @@
 <% include templates/navbar.ejs %>
 
 <div class="container bootstrap">
-    <h2 align="center"><%=condition%></h2>
     <%if(condition==="POSTED"){%>
     <%- include("templates/post.ejs", {post: "", currentUser: currentUser, isInputCard:true}) %>
+    <h2 align="center"><%=condition%></h2>
+    <%}else{%>
+    <h2 align="center"><%=condition%></h2>
     <%}%>
 
-    <% posts.forEach(function(task){ %>
-        <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false, condition: condition}) %>
-    <% }); %>
+    <%if(posts.length===0){%>
+        <h3 align="center">Nothing to show yet...</h3>
+    <%}else{%>
+        <h3 align="center">Owned By You</h3>
+        <% var counter = 0;
+        posts.forEach(function(task){
+        if(task.uid_boss===currentUser.uid){
+            counter++;
+        %>
+            <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false, condition: condition}) %>
+        <%}%>
+        <% });
+        if(counter===0){%>
+        <h4 align="center">Nothing to show yet...</h4>
+        <%}%>
+        <h3 align="center">Owned By Others</h3>
+        <% counter = 0;
+        posts.forEach(function(task){
+            console.log("Task owned by " + task.uid_boss + " and done by " + currentUser.uid)
+        if(task.uid_boss!==currentUser.uid){
+            counter++;
+        %>
+            <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false, condition: condition}) %>
+        <%}%>
+        <% });
+        if(counter===0){%>
+            <h4 align="center">Nothing to show yet...</h4>
+        <%}%>
+    <%}%>
+
 </div>
 </body>
 <script>
@@ -60,10 +89,10 @@
         console.log("called " + api + ": waiting for m_data...");
     }
 
-    function requestJob(tid) {
-        console.log("Requesting job");
+    function takeJob(tid) {
+        console.log("Taking job");
         var dataToSend = {tid: tid};
-        sendDataToServer(JSON.stringify(dataToSend), '/home/requestjob', 'application/json');
+        sendDataToServer(JSON.stringify(dataToSend), '/home/takejob', 'application/json');
     }
 
     function messageBoss(tid) {
@@ -77,22 +106,6 @@
         var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
         console.log(JSON.stringify(dataToSend));
         sendDataToServer(JSON.stringify(dataToSend), '/home/newtask', 'application/json');
-    }
-
-    function acceptPending(uid){
-        var reward_input = document.getElementById("task-compensation-input");
-        var new_instructions = document.getElementById("instructions-text-area");
-        var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
-        console.log(JSON.stringify(dataToSend));
-        sendDataToServer(JSON.stringify(dataToSend), '/home/accept_pending', 'application/json');
-    }
-
-    function requestPending(uid){
-        var reward_input = document.getElementById("task-compensation-input");
-        var new_instructions = document.getElementById("instructions-text-area");
-        var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
-        console.log(JSON.stringify(dataToSend));
-        sendDataToServer(JSON.stringify(dataToSend), '/home/request_pending', 'application/json');
     }
 </script>
 </html>

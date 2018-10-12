@@ -11,10 +11,10 @@
                 if(isInputCard){
                 %>
                     <span class="post-fullname-display"><%= currentUser.fullname %> </span>
-                    <span class="post-username-display">@<%= currentUser.user_name %></span>
+                    <span class="post-username-display">@<%= currentUser.uid %></span>
                 <% }else{ %>
                     <span class="post-fullname-display"><%= post.fullname %> </span>
-                    <span class="post-username-display">@<%= post.user_name %></span>
+                    <span class="post-username-display">@<%= post.uid_boss %></span>
                 <% } %>
 
             </div>
@@ -26,7 +26,7 @@
                     <input id="task-compensation-input" type="number" min="0.01" step="0.01" max="2500" value="0.00"
                            placeholder="Enter $">
                 <% }else{ %>
-                <span id="compensation-amount">$<%= post.reward %></span>
+                    <span id="compensation-amount">$<%= post.reward %></span>
                 <% } %>
             </div>
             </p>
@@ -49,45 +49,52 @@
         <%
         if(isInputCard){
         %>
-        <div>
-            <button onclick="submitNewTask('<%= currentUser.uid %>')" class="w3-button w3-block both">Submit
-            </button>
-        </div>
+            <div>
+                <button onclick="submitNewTask('<%= currentUser.uid %>')" class="w3-button w3-block both">Submit
+                </button>
+            </div>
         <% }else{ %>
-        <div>
-            <%switch (condition) {
-                case "POSTED":%>
-            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Message
-            </button>
-            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Request
-            </button>
-                    <%break;
-                case "PENDING":%>
-            <button onclick="rejectPending('<%= post.tid %>')" class="w3-button w3-block w3-half left">Reject
-            </button>
-            <button onclick="acceptPending('<%= post.tid %>')" class="w3-button w3-half w3-block right">Accept
-            </button>
-            <%break;
-                case "ACTIVE_TASKS":%>
-            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Cancel
-            </button>
-            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Notify
-            </button>
-            <%break;
-                case "COMPLETED":%>
-            <button onclick="venmoOp('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
-            </button>
-            <%break;
-                case "PAID":%>
-            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">History
-            </button>
-            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Message
-            </button>
-            <%break;
-                default:
-                    break;
-            }%>
-        </div>
+            <div>
+                <% switch (condition) {
+                case "POSTED":
+                if(post.uid_boss === currentUser.uid){ %>
+                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
+                    </button>
+                <% }else{ %>
+                    <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Message
+                    </button>
+                    <button onclick="takeJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Take Job
+                    </button>
+                <% } %>
+                <% break;
+                case "ASSIGNED":
+                if(post.uid_boss === currentUser.uid){ %>
+                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
+                    </button>
+                <% }else{ %>
+                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
+                    </button>
+                <% } %>
+                <% break;
+                case "COMPLETED":
+                if(post.uid_boss === currentUser.uid){ %>
+                    <button onclick="venmoOp('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
+                    </button>
+                <% }else{ %>
+                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Notify
+                    </button>
+                <% } %>
+                <% break;
+                case "PAID": %>
+                <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">History
+                </button>
+                <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-half w3-block right">Message
+                </button>
+                <% break;
+                    default:
+                        break;
+                } %>
+            </div>
         <% } %>
     </div>
 </div>

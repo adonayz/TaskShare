@@ -100,8 +100,8 @@
     // attach "Enter" keyboard button to Login button
     document.getElementById("psrd").addEventListener("keyup", function (event) {
         event.preventDefault();
-        $('#toggle-button').change(function () {
-            /*if (this.checked) {
+        /*$('#toggle-button').change(function () {
+            if (this.checked) {
                 if (event.keyCode === 13) {
                     document.getElementById("register-button").click();
                 }
@@ -109,11 +109,11 @@
                 if (event.keyCode === 13) {
                     document.getElementById("loginButton").click();
                 }
-            }*/
-            if (event.keyCode === 13) {
-                document.getElementById("loginButton").click();
             }
-        });
+        });*/
+        if (event.keyCode === 13) {
+            document.getElementById("loginButton").click();
+        }
     });
 
     document.addEventListener('DOMContentLoaded', function () {
