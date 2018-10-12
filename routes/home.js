@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../models/user-authentication');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var dropin = require('braintree-web-drop-in');
 
 var taskSchema = new Schema({
     instructions: {type: String, required: true},
@@ -95,7 +96,7 @@ router.post('/completetask', function (req, res, next) {
         if (err) throw err;
         task.uid_worker = req.session.userId;
         task.status = "COMPLETED";
-        task.assigned_time = Date.now();
+        task.completed_time = Date.now();
         task.save();
     });
     renderHomePage(req, res, next);
@@ -104,11 +105,11 @@ router.post('/completetask', function (req, res, next) {
 router.post('/completepayment', function (req, res, next) {
     console.log("completed payment");
     var dataReceived = req.body;
+    dropin.create({ /* options */ }, callback);
     Task.findById(dataReceived.tid, function (err, task) {
         if (err) throw err;
         task.uid_worker = req.session.userId;
         task.status = "PAID";
-        task.assigned_time = Date.now();
         task.save();
     });
     renderHomePage(req, res, next);
@@ -196,7 +197,7 @@ function renderHomePage(req, res, next, condition) {
 
 function sendTasksToClient(req, res, user_dict, condition) {
     var tasksData = [];
-    Task.find({'status': condition}, '_id uid_boss instructions reward posted_time', function (err, tasks) {
+    Task.find({'status': condition}, '_id uid_boss uid_worker instructions reward posted_time', function (err, tasks) {
         if (err) throw err;
         for (var i = 0; i < tasks.length; i++) {
             console.log(JSON.stringify(tasks[i]));
@@ -211,7 +212,12 @@ function sendTasksToClient(req, res, user_dict, condition) {
                 post_time: tasks[i].posted_time
             };
             console.log(JSON.stringify(taskPackage));
-            tasksData.push(taskPackage);
+            if(condition === "COMPLETED" || condition === "ASSIGNED" || condition === "PAID"){
+                if((tasks[i].uid_boss === req.session.userId) || (tasks[i].uid_worker === req.session.userId)){
+                    tasksData.push(taskPackage);
+                }
+            }else{
+            }
         }
 
         console.log("Task length now: " + tasks.length);

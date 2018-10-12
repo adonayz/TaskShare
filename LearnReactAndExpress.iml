@@ -7,5 +7,6 @@
     <orderEntry type="library" name="@types/ejs" level="application" />
     <orderEntry type="library" name="@types/react" level="application" />
     <orderEntry type="library" name="@types/mongodb" level="application" />
+    <orderEntry type="library" name="dropin" level="application" />
   </component>
 </module>

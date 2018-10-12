@@ -3,10 +3,21 @@
 <head>
     <title><%= title %></title>
     <% include templates/basic_scripts.ejs %>
+    <%
+    if(condition==="COMPLETED"){
+    %>
+    <script src="https://js.braintreegateway.com/web/dropin/1.13.0/js/dropin.min.js"></script>
+    <%}%>
 </head>
 <body>
 
 <% include templates/navbar.ejs %>
+
+<%
+if(condition==="COMPLETED"){
+%>
+    <div id="dropin-container"></div>
+<%}%>
 
 <div class="container bootstrap">
     <%if(condition==="POSTED"){%>
@@ -106,6 +117,18 @@
         var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
         console.log(JSON.stringify(dataToSend));
         sendDataToServer(JSON.stringify(dataToSend), '/home/newtask', 'application/json');
+    }
+
+    function completeTask(tid){
+        var dataToSend = {tid: tid};
+        console.log(JSON.stringify(dataToSend));
+        sendDataToServer(JSON.stringify(dataToSend), '/home/completetask', 'application/json');
+    }
+    
+    function venmoPayment(tid) {
+        var dataToSend = {tid: tid};
+        console.log(JSON.stringify(dataToSend));
+        sendDataToServer(JSON.stringify(dataToSend), '/home/completepayment', 'application/json');
     }
 </script>
 </html>

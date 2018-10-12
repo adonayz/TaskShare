@@ -72,13 +72,15 @@
                     <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
                     </button>
                 <% }else{ %>
-                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
-                    </button>
+                        <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block w3-half left">Cancel
+                        </button>
+                        <button onclick="completeTask('<%= post.tid %>')" class="w3-button w3-half w3-block right">Complete
+                        </button>
                 <% } %>
                 <% break;
                 case "COMPLETED":
                 if(post.uid_boss === currentUser.uid){ %>
-                    <button onclick="venmoOp('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
+                    <button onclick="venmoPayment('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
                     </button>
                 <% }else{ %>
                     <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Notify
