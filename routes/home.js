@@ -79,6 +79,58 @@ router.post('/requestjob', function (req, res, next) {
     renderHomePage(req, res, next);
 });
 
+router.post('/accept_pending', function (req, res, next) {
+    console.log("Received new task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = req.session.userId;
+        task.status = "PENDING";
+        task.assigned_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
+router.post('/reject_pending', function (req, res, next) {
+    console.log("Received new task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = req.session.userId;
+        task.status = "POSTED";
+        task.assigned_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
+router.post('/completetask', function (req, res, next) {
+    console.log("Received new task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = req.session.userId;
+        task.status = "COMPLETED";
+        task.assigned_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
+router.post('/completepaymentk', function (req, res, next) {
+    console.log("Received new task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = req.session.userId;
+        task.status = "PAID";
+        task.assigned_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
 router.post('/newtask', function (req, res, next) {
     console.log("Received new task");
     var newTaskData = req.body;

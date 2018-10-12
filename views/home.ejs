@@ -15,7 +15,7 @@
     <%}%>
 
     <% posts.forEach(function(task){ %>
-        <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false}) %>
+        <%- include('templates/post.ejs', {post: task, currentUser: currentUser, isInputCard:false, condition: condition}) %>
     <% }); %>
 </div>
 </body>
@@ -77,6 +77,22 @@
         var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
         console.log(JSON.stringify(dataToSend));
         sendDataToServer(JSON.stringify(dataToSend), '/home/newtask', 'application/json');
+    }
+
+    function acceptPending(uid){
+        var reward_input = document.getElementById("task-compensation-input");
+        var new_instructions = document.getElementById("instructions-text-area");
+        var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
+        console.log(JSON.stringify(dataToSend));
+        sendDataToServer(JSON.stringify(dataToSend), '/home/accept_pending', 'application/json');
+    }
+
+    function requestPending(uid){
+        var reward_input = document.getElementById("task-compensation-input");
+        var new_instructions = document.getElementById("instructions-text-area");
+        var dataToSend = {uid: uid, reward_input: reward_input.value, new_instructions: new_instructions.value};
+        console.log(JSON.stringify(dataToSend));
+        sendDataToServer(JSON.stringify(dataToSend), '/home/request_pending', 'application/json');
     }
 </script>
 </html>

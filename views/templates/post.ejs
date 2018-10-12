@@ -55,10 +55,38 @@
         </div>
         <% }else{ %>
         <div>
+            <%switch (condition) {
+                case "POSTED":%>
             <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Message
             </button>
             <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Request
             </button>
+                    <%break;
+                case "PENDING":%>
+            <button onclick="rejectPending('<%= post.tid %>')" class="w3-button w3-block w3-half left">Reject
+            </button>
+            <button onclick="acceptPending('<%= post.tid %>')" class="w3-button w3-half w3-block right">Accept
+            </button>
+            <%break;
+                case "ACTIVE_TASKS":%>
+            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Cancel
+            </button>
+            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Notify
+            </button>
+            <%break;
+                case "COMPLETED":%>
+            <button onclick="venmoOp('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
+            </button>
+            <%break;
+                case "PAID":%>
+            <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">History
+            </button>
+            <button onclick="requestJob('<%= post.tid %>')" class="w3-button w3-half w3-block right">Message
+            </button>
+            <%break;
+                default:
+                    break;
+            }%>
         </div>
         <% } %>
     </div>
