@@ -247,11 +247,11 @@ function sendTasksToClient(req, res, user_dict, condition) {
                 post_time: tasks[i].posted_time
             };
             console.log(JSON.stringify(taskPackage));
+            if(tasks[i].status === "POSTED"){
+                postedTasks++;
+            }
             if((tasks[i].uid_boss === req.session.userId) || (tasks[i].uid_worker === req.session.userId)){
                 switch(tasks[i].status){
-                    case "POSTED":
-                        postedTasks++;
-                    break;
                     case "ASSIGNED":
                         activeTasks++;
                         break;
