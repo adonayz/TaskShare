@@ -1,4 +1,6 @@
-#Project Name: Task-Share
+===
+Project Name: Task-Share
+===
 
 https://adonayz-fp.herokuapp.com
 
@@ -24,6 +26,11 @@ objects).
 - The application uses an authentication system that uses bcrypt to hash passwords
 - The applications tracks sessions.
 - Paths/routes were correctly parsed.
+
+Existing bugs
+---
+- Venmo payment
+- Messaging system removed (had trouble converting it from react to ejs)
 
 ## Technical Achievements
 - **Tech Achievement 1**: Used a mongoose (mongodb) database. Several schemas were created and modified (through creations, edits and deletions)
