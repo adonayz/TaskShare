@@ -9,8 +9,20 @@ var mongoose = require('mongoose');
 var connectMongo = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
 //mongoose.connect(process.env.PROD_MONGODB);
-mongoose.connect('mongodb://localhost/appstorage');
+//mongoose.connect('mongodb://localhost/appstorage');
 //mongoose.connect("mongodb://taskshare:taskshare123@ds237855.mlab.com:37855/taskshare");
+var uristring =
+    process.env.PROD_MONGODB ||
+    'mongodb://localhost/appstorage';
+
+mongoose.connect(uristring, function (err, res) {
+    if (err) {
+        console.log ('Cant connect: ' + uristring + '. ' + err);
+    } else {
+        console.log ('Connected to: ' + uristring);
+    }
+});
+
 var database = mongoose.connection;
 
 database.on('error', console.error.bind(console, 'connection error:'));
