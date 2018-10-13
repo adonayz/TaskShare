@@ -11,10 +11,10 @@
                 if(isInputCard){
                 %>
                     <span class="post-fullname-display"><%= currentUser.fullname %> </span>
-                    <span class="post-username-display">@<%= currentUser.uid %></span>
+                    <span class="post-username-display">@<%= currentUser.username %></span>
                 <% }else{ %>
                     <span class="post-fullname-display"><%= post.fullname %> </span>
-                    <span class="post-username-display">@<%= post.uid_boss %></span>
+                    <span class="post-username-display">@<%= post.username %></span>
                 <% } %>
 
             </div>
@@ -40,7 +40,20 @@
             <% }else{ %>
                 <div style="float:left;">
                     <p><%= post.instructions %></p>
-                    <p><span class="post-time-display">time posted: <%= Date(post.posted_time).toString() %></span></p>
+                    <% switch (condition) {
+                    case "POSTED":%>
+                        <p><span class="post-time-display">time posted: <%= Date(post.posted_time).toString() %></span></p>
+                    <% break;
+                    case "ASSIGNED":%>
+                        <p><span class="post-time-display">time assigned: <%= Date(post.assigned_time).toString() %></span></p>
+                    <% break;
+                    case "COMPLETED":%>
+                        <p><span class="post-time-display">time completed: <%= Date(post.completed_time).toString() %></span></p>
+                    <% break;
+                    case "PAID":%>
+                        <p><span class="post-time-display">time completed: <%= Date(post.completed_time).toString() %></span></p>
+                    <% break;
+                    }%>
                 </div>
             <% } %>
         </div>
@@ -58,7 +71,7 @@
                 <% switch (condition) {
                 case "POSTED":
                 if(post.uid_boss === currentUser.uid){ %>
-                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
+                    <button onclick="deleteTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
                     </button>
                 <% }else{ %>
                     <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">Message
@@ -72,26 +85,26 @@
                     <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Cancel
                     </button>
                 <% }else{ %>
-                        <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block w3-half left">Cancel
-                        </button>
-                        <button onclick="completeTask('<%= post.tid %>')" class="w3-button w3-half w3-block right">Complete
-                        </button>
+                    <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block w3-half left">Cancel
+                    </button>
+                    <button onclick="completeTask('<%= post.tid %>')" class="w3-button w3-half w3-block right">Complete
+                    </button>
                 <% } %>
                 <% break;
                 case "COMPLETED":
                 if(post.uid_boss === currentUser.uid){ %>
-                    <button onclick="venmoPayment('<%= currentUser.uid %>')" class="w3-button w3-block both">Pay with Venmo
-                    </button>
+                        <button onclick="completePayment('<%= post.tid %>')" class="w3-button w3-block both">Complete
+                        </button>
                 <% }else{ %>
                     <button onclick="cancelTask('<%= post.tid %>')" class="w3-button w3-block both">Notify
                     </button>
                 <% } %>
                 <% break;
                 case "PAID": %>
-                <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">History
-                </button>
-                <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-half w3-block right">Message
-                </button>
+                    <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-block w3-half left">History
+                    </button>
+                    <button onclick="messageBoss('<%= post.tid %>')" class="w3-button w3-half w3-block right">Message
+                    </button>
                 <% break;
                     default:
                         break;

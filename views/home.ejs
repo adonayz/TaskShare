@@ -3,15 +3,10 @@
 <head>
     <title><%= title %></title>
     <% include templates/basic_scripts.ejs %>
-    <%
-    if(condition==="COMPLETED"){
-    %>
-    <script src="https://js.braintreegateway.com/web/dropin/1.13.0/js/dropin.min.js"></script>
-    <%}%>
 </head>
 <body>
 
-<% include templates/navbar.ejs %>
+<%- include("templates/navbar.ejs", {posted_tasks: posted_tasks, active_tasks: active_tasks, completed_tasks: completed_tasks, paid_tasks: paid_tasks})%>
 
 <%
 if(condition==="COMPLETED"){
@@ -101,7 +96,7 @@ if(condition==="COMPLETED"){
     }
 
     function takeJob(tid) {
-        console.log("Taking job");
+        console.log("Taking job " + tid);
         var dataToSend = {tid: tid};
         sendDataToServer(JSON.stringify(dataToSend), '/home/takejob', 'application/json');
     }
@@ -125,10 +120,22 @@ if(condition==="COMPLETED"){
         sendDataToServer(JSON.stringify(dataToSend), '/home/completetask', 'application/json');
     }
     
-    function venmoPayment(tid) {
+    function completePayment(tid) {
         var dataToSend = {tid: tid};
         console.log(JSON.stringify(dataToSend));
         sendDataToServer(JSON.stringify(dataToSend), '/home/completepayment', 'application/json');
+    }
+
+    function deleteTask(tid) {
+        var dataToSend = {tid: tid};
+        console.log("Deleting tid " + tid);
+        sendDataToServer(JSON.stringify(dataToSend), '/home/deletetask', 'application/json');
+    }
+
+    function cancelTask(tid) {
+        var dataToSend = {tid: tid};
+        console.log("Deleting tid " + tid);
+        sendDataToServer(JSON.stringify(dataToSend), '/home/canceltask', 'application/json');
     }
 </script>
 </html>

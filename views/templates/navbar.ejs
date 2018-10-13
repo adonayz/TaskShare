@@ -1,10 +1,10 @@
 <div class="nav-bar">
     <ul class="nav-list">
-        <li><a id="app-name" href="/home">APP NAME</a></li>
-        <li class="links"><a href="/home">Home</a></li>
-        <li class="links"><a href="/home/active_tasks">Active Tasks</a></li>
-        <li class="links"><a href="/home/completed">Completed</a></li>
-        <li class="links"><a href="/home/paid">Paid</a></li>
+        <li><a id="app-name" href="/home">TASK SHARE</a></li>
+        <li class="links"><a href="/home">Home <span id="active_badge" class="badge alert-danger"><%=posted_tasks%></span></a></li>
+        <li class="links"><a href="/home/active_tasks">Active Tasks <span id="active_badge" class="badge alert-danger"><%=active_tasks%></span></a></li>
+        <li class="links"><a href="/home/completed">Completed <span id="completed_badge" class="badge alert-danger"><%=completed_tasks%></span></a></li>
+        <li class="links"><a href="/home/paid">Paid <span id="active_badge" class="badge alert-danger"><%=paid_tasks%></span></a></li>
         <li class="right links"><a class="active" href="/logout">Logout</a></li>
     </ul>
 </div>

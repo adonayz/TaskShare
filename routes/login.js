@@ -71,7 +71,6 @@ router.post('/register', function (req, res, next) {
                 var err = new Error('Try again');
                 err.status = 401;
                 //res.send('Try again');
-                console.log(error.toString());
                 return next(err);
             } else {
                 req.session.userId = user._id;

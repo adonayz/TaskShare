@@ -8,8 +8,8 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var connectMongo = require('connect-mongo')(session);
 var bodyParser = require('body-parser');
-mongoose.connect(process.env.PROD_MONGODB);
-//mongoose.connect('mongodb://localhost/appstorage');
+//mongoose.connect(process.env.PROD_MONGODB);
+mongoose.connect('mongodb://localhost/appstorage');
 //mongoose.connect("mongodb://taskshare:taskshare123@ds237855.mlab.com:37855/taskshare");
 var database = mongoose.connection;
 

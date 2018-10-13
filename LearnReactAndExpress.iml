@@ -8,5 +8,10 @@
     <orderEntry type="library" name="@types/react" level="application" />
     <orderEntry type="library" name="@types/mongodb" level="application" />
     <orderEntry type="library" name="dropin" level="application" />
+    <orderEntry type="library" name="venmo" level="application" />
+    <orderEntry type="library" name="data-collector" level="application" />
+    <orderEntry type="library" name="client" level="application" />
+    <orderEntry type="library" name="checkout" level="application" />
+    <orderEntry type="library" name="paypal-checkout" level="application" />
   </component>
 </module>

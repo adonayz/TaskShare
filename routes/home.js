@@ -3,7 +3,6 @@ var router = express.Router();
 var User = require('../models/user-authentication');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var dropin = require('braintree-web-drop-in');
 
 var taskSchema = new Schema({
     instructions: {type: String, required: true},
@@ -13,7 +12,8 @@ var taskSchema = new Schema({
     status: {type: String, required: true},
     posted_time: {type: Date, required: true, default: Date.now()},
     assigned_time: {type: Date},
-    completed_time: {type: Date}
+    completed_time: {type: Date},
+    paid_time: {type: Date}
 }, {collection: 'task-data'});
 
 var messageSchema = new Schema({
@@ -94,7 +94,6 @@ router.post('/completetask', function (req, res, next) {
     var dataReceived = req.body;
     Task.findById(dataReceived.tid, function (err, task) {
         if (err) throw err;
-        task.uid_worker = req.session.userId;
         task.status = "COMPLETED";
         task.completed_time = Date.now();
         task.save();
@@ -103,13 +102,24 @@ router.post('/completetask', function (req, res, next) {
 });
 
 router.post('/completepayment', function (req, res, next) {
-    console.log("completed payment");
+    console.log("completed payment" + req.body.tid);
     var dataReceived = req.body;
-    dropin.create({ /* options */ }, callback);
     Task.findById(dataReceived.tid, function (err, task) {
         if (err) throw err;
-        task.uid_worker = req.session.userId;
         task.status = "PAID";
+        task.paid_time = Date.now();
+        task.save();
+    });
+    renderHomePage(req, res, next);
+});
+
+router.post('/canceltask', function (req, res, next) {
+    console.log("Canceling Task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+        task.uid_worker = null;
+        task.status = "POSTED";
         task.save();
     });
     renderHomePage(req, res, next);
@@ -128,6 +138,18 @@ router.post('/newtask', function (req, res, next) {
     createTask(toTaskFormat, req, res, next);
 });
 
+router.post('/deletetask', function (req, res, next) {
+    console.log("Received delete task");
+    var dataReceived = req.body;
+    Task.findById(dataReceived.tid, function (err, task) {
+        if (err) throw err;
+       task.remove(function(err) {
+           if (err) throw err;
+           console.log('Task deleted!');
+       });
+    });
+    renderHomePage(req, res, next);
+});
 
 router.get('/get-users', function (req, res, next) {
     User.find({}, function (err, users) {
@@ -195,9 +217,22 @@ function renderHomePage(req, res, next, condition) {
     });
 }
 
+function venmostuff() {/*
+    gateway.paymentMethod.create({
+        customerId: "12345",
+        paymentMethodNonce: nonceFromTheClient
+    }, function (err, result) { });
+*/
+
+}
+
 function sendTasksToClient(req, res, user_dict, condition) {
     var tasksData = [];
-    Task.find({'status': condition}, '_id uid_boss uid_worker instructions reward posted_time', function (err, tasks) {
+    var postedTasks = 0;
+    var activeTasks = 0;
+    var paidTasks = 0;
+    var completedTasks = 0;
+    Task.find({}, '_id uid_boss uid_worker status instructions reward posted_time', function (err, tasks) {
         if (err) throw err;
         for (var i = 0; i < tasks.length; i++) {
             console.log(JSON.stringify(tasks[i]));
@@ -212,11 +247,30 @@ function sendTasksToClient(req, res, user_dict, condition) {
                 post_time: tasks[i].posted_time
             };
             console.log(JSON.stringify(taskPackage));
-            if(condition === "COMPLETED" || condition === "ASSIGNED" || condition === "PAID"){
-                if((tasks[i].uid_boss === req.session.userId) || (tasks[i].uid_worker === req.session.userId)){
+            if((tasks[i].uid_boss === req.session.userId) || (tasks[i].uid_worker === req.session.userId)){
+                switch(tasks[i].status){
+                    case "POSTED":
+                        postedTasks++;
+                    break;
+                    case "ASSIGNED":
+                        activeTasks++;
+                        break;
+                    case "COMPLETED":
+                        completedTasks++;
+                        break;
+                    case "PAID":
+                        paidTasks++;
+                        break;
+                }
+            }
+            if(condition === tasks[i].status){
+                if(condition === "COMPLETED" || condition === "ASSIGNED" || condition === "PAID"){
+                    if((tasks[i].uid_boss === req.session.userId) || (tasks[i].uid_worker === req.session.userId)){
+                        tasksData.push(taskPackage);
+                    }
+                }else{
                     tasksData.push(taskPackage);
                 }
-            }else{
             }
         }
 
@@ -228,9 +282,14 @@ function sendTasksToClient(req, res, user_dict, condition) {
         };
         console.log(JSON.stringify(userData));
         console.log(JSON.stringify(tasksData));
+        console.log("ASSIGNED TASKS " + activeTasks);
         res.render('home', {
             title: "Final Project",
             condition: condition,
+            posted_tasks:postedTasks,
+            active_tasks: activeTasks,
+            completed_tasks: completedTasks,
+            paid_tasks: paidTasks,
             posts: tasksData,
             currentUser: userData
         });
