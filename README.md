@@ -4,8 +4,7 @@ Project Name: Task-Share
 
 https://adonayz-fp.herokuapp.com
 
-## adonayz
-- Adonay Resom
+## Team Member: Adonay Resom (adonayz)
 
 Project Summary
 ---
