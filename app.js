@@ -32,7 +32,6 @@ database.once('open', function () {
 
 var homeRouter = require('./routes/home');
 var loginRouter = require('./routes/login');
-var pendingRouter = require('./routes/pending');
 
 app.use(session({
     store: new connectMongo({
@@ -58,7 +57,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/home', homeRouter);
 app.use('/', loginRouter);
-app.use('/pending', pendingRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
